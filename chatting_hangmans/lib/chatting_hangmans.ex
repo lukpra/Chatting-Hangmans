@@ -12,7 +12,8 @@ defmodule ChattingHangmans do
       :world
 
   """
-  def hello do
-    :world
+  def start do
+    IO.puts("Starting application ... 🏁 ")
+    # ChattingHangmans.Supervisor.start_link()
   end
 end
