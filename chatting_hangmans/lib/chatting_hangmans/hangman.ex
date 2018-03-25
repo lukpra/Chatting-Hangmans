@@ -7,7 +7,7 @@ defmodule ChattingHangmans.Hangman do
   alias ChattingHangmans.Game
 
   @doc "Transforms current game state into new one"
-  def play(game) do
+  def play(%Game{} = game) do
     game
     |> parse
     |> validate_input
@@ -62,7 +62,7 @@ defmodule ChattingHangmans.Hangman do
       game.secret_phrase
       |> String.to_charlist()
       |> Enum.with_index()
-      |> Enum.filter(fn {letter, index} ->
+      |> Enum.filter(fn {letter, _index} ->
         letter == List.first(to_charlist(game.current_letter))
       end)
       |> Enum.into(%{}, fn {letter, index} -> {index, letter} end)
@@ -110,7 +110,138 @@ defmodule ChattingHangmans.Hangman do
     String.duplicate("_", number_of_letters)
   end
 
-  def draw_game(%Game{} = game) do
-    game
+  defp draw_game(%Game{} = game) do
+    lost_life = @lifes_number - game.life
+    %{game | drawing: draw_game(lost_life)}
+  end
+
+  defp draw_game(8 = _lost_lifes) do
+    '''
+      |--------
+      |      |
+      |      0 
+      |     /|\
+      |      |
+      |     / \
+      |
+     /|\__________
+    '''
+  end
+
+  defp draw_game(7 = _lost_lifes) do
+    '''
+      |--------
+      |      |
+      |      0 
+      |     /|\
+      |      |
+      |     / 
+      |
+     /|\__________
+    '''
+  end
+
+  defp draw_game(6 = _lost_lifes) do
+    '''
+      |--------
+      |      |
+      |      0 
+      |     /|\
+      |      |
+      |      
+      |
+     /|\__________
+    '''
+  end
+
+  defp draw_game(5 = _lost_lifes) do
+    '''
+      |--------
+      |      |
+      |      0 
+      |     /|\
+      |      
+      |      
+      |
+     /|\__________
+    '''
+  end
+
+  defp draw_game(4 = _lost_lifes) do
+    '''
+      |--------
+      |      |
+      |      0 
+      |     /|
+      |      
+      |      
+      |
+     /|\__________
+    '''
+  end
+
+  defp draw_game(3 = _lost_lifes) do
+    '''
+      |--------
+      |      |
+      |      0 
+      |      |
+      |      
+      |      
+      |
+     /|\__________
+    '''
+  end
+
+  defp draw_game(2 = _lost_lifes) do
+    '''
+      |--------
+      |      |
+      |      0 
+      |      |
+      |      
+      |      
+      |
+     /|\__________
+    '''
+  end
+
+  defp draw_game(1 = _lost_lifes) do
+    '''
+      |--------
+      |      
+      |      
+      |      
+      |      
+      |      
+      |
+     /|\__________
+    '''
+  end
+
+  defp draw_game(0 = _lost_lifes) do
+    '''
+      |--------
+      |      
+      |      
+      |      
+      |      
+      |      
+      |
+     /|\__________
+    '''
+  end
+
+  defp draw_game(_) do
+    '''
+      |--------
+      |      
+      |      
+      |     What? 
+      |      How many lifes
+      |       Do you have!? 
+      |
+     /|\__________
+    '''
   end
 end
