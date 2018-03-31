@@ -14,6 +14,8 @@ defmodule ChattingHangmans.Hangman do
     |> initialize_new_game
     |> advance_game
     |> draw_game
+
+    # |> determine_game_state # Todo fix function and handle current hangman game states
   end
 
   def parse(%Game{secret_phrase: secret_phrase, current_letter: current_letter} = game) do
@@ -198,7 +200,7 @@ defmodule ChattingHangmans.Hangman do
       |--------
       |      |
       |      0 
-      |      |
+      |      
       |      
       |      
       |
@@ -221,7 +223,7 @@ defmodule ChattingHangmans.Hangman do
 
   defp draw_game(0 = _lost_lifes) do
     '''
-      |--------
+      |
       |      
       |      
       |      
@@ -243,5 +245,25 @@ defmodule ChattingHangmans.Hangman do
       |
      /|\__________
     '''
+  end
+
+  def determine_game_state({} = game) do
+    if is_game_lost(game) do
+      %{lost: game}
+    else
+      if is_game_won(game) do
+        %{won: game}
+      else
+        %{in_progress: game}
+      end
+    end
+  end
+
+  def is_game_won(%Game{} = game) do
+    game.secret_phrase == game.guessed_phrased and not is_game_lost(game)
+  end
+
+  def is_game_lost(%Game{} = game) do
+    game.life <= 0
   end
 end
