@@ -47,14 +47,20 @@ defmodule ChattingHangmans.HangmanServer do
     {:reply, state.games, state}
   end
 
-  # TODO: Create def create_or_enqueue_game
   def handle_call({:create_new_game, player_name, secret_phrase}, _from, state) do
     current_game = Map.get(state.games, player_name)
 
-    new_game = %Game{players: player_name, secret_phrase: secret_phrase}
+    if(current_game == nil) do
+      new_game = %Game{players: player_name, secret_phrase: secret_phrase}
+      updated_games = Map.put(state.games, player_name, new_game)
+      new_state = %{state | games: updated_games}
+    else
+      phrase_list = Map.get(state.games, player_name, [])
+      new_phrase_list = [secret_phrase | phrase_list]
+      updated_queue = Map.put(state.games, player_name, new_phrase_list)
+      new_state = %{state | games_queue: updated_queue}
+    end
 
-    updated_games = Map.put(state.games, player_name, new_game)
-    new_state = %{state | games: updated_games}
     {:reply, :created, new_state}
   end
 
