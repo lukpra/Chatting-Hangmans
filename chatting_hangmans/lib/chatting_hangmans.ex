@@ -1,19 +1,9 @@
 defmodule ChattingHangmans do
-  @moduledoc """
-  Documentation for ChattingHangmans.
-  """
 
-  @doc """
-  Hello world.
+  use Application
 
-  ## Examples
-
-      iex> ChattingHangmans.hello
-      :world
-
-  """
-  def start do
+  def start(_type, _args) do
     IO.puts("Starting application ... 🏁 ")
-    # ChattingHangmans.Supervisor.start_link()
+    ChattingHangmans.Supervisor.start_link()
   end
 end
