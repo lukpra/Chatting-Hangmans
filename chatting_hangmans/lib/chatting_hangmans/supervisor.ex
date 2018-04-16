@@ -8,7 +8,8 @@ defmodule ChattingHangmans.Supervisor do
   
     def init(:ok) do
       children = [
-        ChattingHangmans.HangmanServer
+        ChattingHangmans.HangmanServer,
+        ChattingHangmans.DiscordConsumer 
       ]
   
       Supervisor.init(children, strategy: :one_for_one)

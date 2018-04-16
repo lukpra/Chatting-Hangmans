@@ -11,7 +11,6 @@ defmodule ChattingHangmans.HangmanServer do
   end
 
   # Client Interface
-
   def start_link(_arg) do
     IO.puts("Starting Hangman Game Server ...")
     GenServer.start_link(__MODULE__, %State{}, name: @name)
@@ -23,6 +22,10 @@ defmodule ChattingHangmans.HangmanServer do
 
   def guess_a_letter(player_name, secret_letter) do
     GenServer.call(@name, {:guess_a_letter, player_name, secret_letter})
+  end
+
+  def current_games_for_user(player_name) do
+    GenServer.call(@name, {:current_games_for_user, player_name})
   end
 
   def current_games do
@@ -41,6 +44,11 @@ defmodule ChattingHangmans.HangmanServer do
 
   def handle_cast(:clear, state) do
     {:noreply, %{state | games: %{}}}
+  end
+
+  def handle_call({:current_games_for_user, player_name}, _from, state) do
+    games_for_given_user = Map.get(state.games, player_name)
+    {:reply, games_for_given_user, state}
   end
 
   def handle_call(:current_games, _from, state) do
@@ -77,8 +85,8 @@ defmodule ChattingHangmans.HangmanServer do
   end
 end
 
-alias ChattingHangmans.HangmanServer
-{:ok, pid} = HangmanServer.start_link("anything")
+# alias ChattingHangmans.HangmanServer
+# {:ok, pid} = HangmanServer.start_link("anything")
 
-IO.inspect(HangmanServer.create_new_game("larry", "bazinga"))
-IO.inspect(HangmanServer.guess_a_letter("larry", "a"))
+# IO.inspect(HangmanServer.create_new_game("larry", "bazinga"))
+# IO.inspect(HangmanServer.guess_a_letter("larry", "a"))
